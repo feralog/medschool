@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migração para Firebase - Quiz Médico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .main-card { max-width: 800px; margin: 0 auto; }
+        .log { background: #000; color: #0f0; padding: 20px; border-radius: 8px; max-height: 400px; overflow-y: auto; font-family: monospace; font-size: 12px; }
+        .progress-section { margin-top: 20px; }
+        .stat-card { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card shadow-lg main-card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">🔥 Migração de Dados para Firebase</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>📋 O que este script faz:</strong>
+                    <ul class="mb-0">
+                        <li>Lê todas as questões dos arquivos JSON locais</li>
+                        <li>Faz upload para o Firestore (banco de dados)</li>
+                        <li>Faz upload de imagens para o Firebase Storage</li>
+                        <li>Atualiza referências de imagens</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>⚠️ IMPORTANTE:</strong> Certifique-se de que o arquivo <code>js/firebase-config.js</code> está configurado com suas credenciais do Firebase antes de continuar!
+                </div>
+
+                <div class="stat-card">
+                    <strong>Status:</strong> <span id="status" class="badge bg-secondary">Aguardando</span>
+                </div>
+
+                <div class="progress-section">
+                    <label>Progresso Geral:</label>
+                    <div class="progress mb-2">
+                        <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%">0%</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <strong>Módulos migrados:</strong> <span id="modules-count">0</span> / <span id="modules-total">0</span>
+                </div>
+                <div class="stat-card">
+                    <strong>Questões migradas:</strong> <span id="questions-count">0</span>
+                </div>
+                <div class="stat-card">
+                    <strong>Imagens migradas:</strong> <span id="images-count">0</span>
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button id="start-btn" class="btn btn-primary btn-lg">
+                        🚀 Iniciar Migração
+                    </button>
+                    <button id="clear-btn" class="btn btn-danger" disabled>
+                        🗑️ Limpar Dados Firebase (Cuidado!)
+                    </button>
+                </div>
+
+                <div class="log mt-4" id="log">
+                    <div>📦 Log de migração aparecerá aqui...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+    <!-- Firebase Config -->
+    <script src="../js/firebase-config.js"></script>
+
+    <!-- Quiz Config -->
+    <script src="../js/config.js"></script>
+
+    <!-- Migration Script -->
+    <script>
+        let db, storage;
+        let stats = {
+            modulesTotal: 0,
+            modulesMigrated: 0,
+            questionsMigrated: 0,
+            imagesMigrated: 0
+        };
+
+        function log(message, type = 'info') {
+            const logElement = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#f00' : type === 'success' ? '#0f0' : '#0ff';
+            logElement.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function updateProgress(progress) {
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = Math.round(progress) + '%';
+        }
+
+        function updateStats() {
+            document.getElementById('modules-count').textContent = stats.modulesMigrated;
+            document.getElementById('modules-total').textContent = stats.modulesTotal;
+            document.getElementById('questions-count').textContent = stats.questionsMigrated;
+            document.getElementById('images-count').textContent = stats.imagesMigrated;
+        }
+
+        function setStatus(text, className = 'bg-secondary') {
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = text;
+            statusElement.className = 'badge ' + className;
+        }
+
+        async function migrateModule(moduleId, moduleConfig) {
+            try {
+                log(`📦 Carregando módulo: ${moduleConfig.name}...`);
+
+                // Carregar JSON
+                const response = await fetch(`../${moduleConfig.file}.json`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const questions = await response.json();
+                log(`✓ Carregadas ${questions.length} questões de ${moduleConfig.name}`, 'success');
+
+                // Salvar cada questão no Firestore
+                const batch = db.batch();
+                const moduleRef = db.collection('modules').doc(moduleId);
+
+                for (let i = 0; i < questions.length; i++) {
+                    const question = questions[i];
+
+                    // Verificar se tem imagem e fazer upload se necessário
+                    if (question.image) {
+                        try {
+                            question.image = await uploadImage(question.image);
+                            stats.imagesMigrated++;
+                            updateStats();
+                        } catch (error) {
+                            log(`⚠️ Erro ao fazer upload da imagem: ${error.message}`, 'error');
+                        }
+                    }
+
+                    const questionRef = moduleRef.collection('questions').doc(`q${i}`);
+                    batch.set(questionRef, {
+                        ...question,
+                        order: i,
+                        moduleId: moduleId,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    stats.questionsMigrated++;
+                }
+
+                // Salvar metadata do módulo
+                batch.set(moduleRef, {
+                    id: moduleId,
+                    name: moduleConfig.name,
+                    totalQuestions: questions.length,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                await batch.commit();
+                log(`✅ Módulo ${moduleConfig.name} migrado com sucesso!`, 'success');
+
+                stats.modulesMigrated++;
+                updateStats();
+
+                return true;
+
+            } catch (error) {
+                log(`❌ Erro ao migrar módulo ${moduleId}: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function uploadImage(imagePath) {
+            // Se já é uma URL do Firebase, retornar
+            if (imagePath.startsWith('http')) {
+                return imagePath;
+            }
+
+            try {
+                log(`📷 Fazendo upload de imagem: ${imagePath}...`);
+
+                // Buscar imagem local
+                const response = await fetch(`../${imagePath}`);
+                const blob = await response.blob();
+
+                // Extrair nome do arquivo e extensão
+                const fileName = imagePath.split('/').pop();
+                const storageRef = storage.ref().child(`questions/${fileName}`);
+
+                // Upload
+                await storageRef.put(blob);
+
+                // Obter URL pública
+                const downloadURL = await storageRef.getDownloadURL();
+
+                log(`✓ Imagem enviada: ${fileName}`, 'success');
+                return downloadURL;
+
+            } catch (error) {
+                log(`⚠️ Erro ao fazer upload de imagem ${imagePath}: ${error.message}`, 'error');
+                return imagePath; // Retorna path original em caso de erro
+            }
+        }
+
+        async function startMigration() {
+            if (!window.firebaseDb || !window.firebaseStorage) {
+                alert('Firebase não configurado! Verifique js/firebase-config.js');
+                return;
+            }
+
+            db = window.firebaseDb;
+            storage = window.firebaseStorage;
+
+            const confirmed = confirm(
+                '⚠️ ATENÇÃO!\n\n' +
+                'Esta operação irá:\n' +
+                '1. Fazer upload de todas as questões para o Firestore\n' +
+                '2. Fazer upload de todas as imagens para o Storage\n\n' +
+                'Isso pode levar alguns minutos.\n\n' +
+                'Deseja continuar?'
+            );
+
+            if (!confirmed) return;
+
+            document.getElementById('start-btn').disabled = true;
+            document.getElementById('clear-btn').disabled = false;
+            setStatus('Migrando...', 'bg-warning');
+
+            // Resetar stats
+            stats = { modulesTotal: 0, modulesMigrated: 0, questionsMigrated: 0, imagesMigrated: 0 };
+
+            log('='.repeat(50));
+            log('🚀 INICIANDO MIGRAÇÃO PARA FIREBASE', 'success');
+            log('='.repeat(50));
+
+            try {
+                // Coletar todos os módulos
+                const allModules = [];
+
+                for (const [specialtyId, specialty] of Object.entries(quizConfig.specialties)) {
+                    if (specialty.hasSubcategories && specialty.subcategories) {
+                        for (const [subcatId, subcategory] of Object.entries(specialty.subcategories)) {
+                            subcategory.modules?.forEach(module => {
+                                allModules.push({ id: module.id, config: module });
+                            });
+                        }
+                    } else if (specialty.modules) {
+                        specialty.modules.forEach(module => {
+                            allModules.push({ id: module.id, config: module });
+                        });
+                    }
+                }
+
+                stats.modulesTotal = allModules.length;
+                updateStats();
+
+                log(`📊 Total de módulos a migrar: ${stats.modulesTotal}`);
+
+                // Migrar cada módulo
+                for (let i = 0; i < allModules.length; i++) {
+                    const { id, config } = allModules[i];
+                    await migrateModule(id, config);
+
+                    const progress = ((i + 1) / allModules.length) * 100;
+                    updateProgress(progress);
+                }
+
+                log('='.repeat(50));
+                log('✅ MIGRAÇÃO CONCLUÍDA COM SUCESSO!', 'success');
+                log('='.repeat(50));
+                log(`📊 Estatísticas:`);
+                log(`   - Módulos: ${stats.modulesMigrated}/${stats.modulesTotal}`);
+                log(`   - Questões: ${stats.questionsMigrated}`);
+                log(`   - Imagens: ${stats.imagesMigrated}`);
+                log('='.repeat(50));
+
+                setStatus('Concluída', 'bg-success');
+                alert('✅ Migração concluída com sucesso!\n\nVerifique o Firebase Console para confirmar os dados.');
+
+            } catch (error) {
+                log('❌ ERRO DURANTE A MIGRAÇÃO: ' + error.message, 'error');
+                setStatus('Erro', 'bg-danger');
+                alert('Erro durante a migração. Verifique o log para detalhes.');
+            }
+        }
+
+        async function clearFirebase() {
+            const confirmed = confirm(
+                '⚠️⚠️⚠️ PERIGO! ⚠️⚠️⚠️\n\n' +
+                'Esta operação irá DELETAR TODOS OS DADOS do Firestore!\n\n' +
+                'Isso inclui:\n' +
+                '- Todas as questões\n' +
+                '- Todo o progresso dos usuários\n' +
+                '- Todas as sessões\n\n' +
+                'ESTA AÇÃO NÃO PODE SER DESFEITA!\n\n' +
+                'Tem certeza ABSOLUTA?'
+            );
+
+            if (!confirmed) return;
+
+            const doubleConfirm = prompt('Digite "DELETAR TUDO" para confirmar:');
+            if (doubleConfirm !== 'DELETAR TUDO') {
+                alert('Operação cancelada.');
+                return;
+            }
+
+            setStatus('Limpando...', 'bg-danger');
+            log('🗑️ Limpando dados do Firestore...');
+
+            try {
+                // Deletar todos os módulos
+                const modulesSnapshot = await db.collection('modules').get();
+                const batch = db.batch();
+
+                modulesSnapshot.forEach(doc => {
+                    batch.delete(doc.ref);
+                });
+
+                await batch.commit();
+
+                log('✓ Dados limpos com sucesso', 'success');
+                setStatus('Limpo', 'bg-secondary');
+                alert('Dados removidos. Você pode executar a migração novamente.');
+
+            } catch (error) {
+                log('❌ Erro ao limpar dados: ' + error.message, 'error');
+                alert('Erro ao limpar dados. Verifique o log.');
+            }
+        }
+
+        // Event listeners
+        document.getElementById('start-btn').addEventListener('click', startMigration);
+        document.getElementById('clear-btn').addEventListener('click', clearFirebase);
+
+        // Verificar Firebase ao carregar
+        window.addEventListener('load', () => {
+            if (window.firebaseDb && window.firebaseStorage) {
+                log('✓ Firebase conectado e pronto!', 'success');
+                setStatus('Pronto', 'bg-success');
+            } else {
+                log('❌ Firebase NÃO configurado!', 'error');
+                setStatus('Erro de Config', 'bg-danger');
+                document.getElementById('start-btn').disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>

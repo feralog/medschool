@@ -9,7 +9,7 @@
 
 class APIManager {
     constructor() {
-        this.useFirebase = false; // TODO: Alterar quando Firebase estiver configurado
+        this.useFirebase = true; // Firebase ativado!
         this.questionsCache = {}; // Cache de questões carregadas
         this.loadingPromises = {}; // Prevenir carregamentos duplicados
     }
@@ -96,19 +96,47 @@ class APIManager {
     }
 
     /**
-     * Carregar questões do Firebase (futuro)
+     * Carregar questões do Firebase
      */
     async loadFromFirebase(moduleId) {
-        // TODO: Implementar quando Firebase estiver configurado
-        // const questionsRef = firebase.firestore().collection('questions').doc(moduleId);
-        // const doc = await questionsRef.get();
-        // return doc.exists ? doc.data() : null;
+        try {
+            // Buscar questões no Firestore
+            const questionsSnapshot = await window.firebaseDb
+                .collection('modules')
+                .doc(moduleId)
+                .collection('questions')
+                .orderBy('order')
+                .get();
 
-        console.log('Firebase não configurado ainda');
-        return {
-            success: false,
-            error: 'Firebase não configurado'
-        };
+            if (questionsSnapshot.empty) {
+                return {
+                    success: false,
+                    error: `Nenhuma questão encontrada para o módulo ${moduleId}. Execute o script de migração.`
+                };
+            }
+
+            const questions = [];
+            questionsSnapshot.forEach(doc => {
+                questions.push(doc.data());
+            });
+
+            // Armazenar em cache
+            this.questionsCache[moduleId] = questions;
+
+            console.log(`✓ Carregadas ${questions.length} questões do módulo ${moduleId} (Firebase)`);
+
+            return {
+                success: true,
+                questions: questions
+            };
+
+        } catch (error) {
+            console.error(`Erro ao carregar módulo ${moduleId} do Firebase:`, error);
+            return {
+                success: false,
+                error: `Falha ao carregar do Firebase: ${error.message}`
+            };
+        }
     }
 
     /**
@@ -256,25 +284,56 @@ class APIManager {
     }
 
     /**
-     * Salvar progresso no Firebase (futuro)
+     * Salvar progresso no Firebase
      */
     async saveProgressFirebase(userId, moduleId, questionIndex, isCorrect) {
-        // TODO: Implementar
-        // const progressRef = firebase.firestore()
-        //     .collection('users')
-        //     .doc(userId)
-        //     .collection('progress')
-        //     .doc(moduleId);
-        //
-        // await progressRef.set({
-        //     [`question_${questionIndex}`]: {
-        //         isCorrect,
-        //         timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        //     }
-        // }, { merge: true });
+        try {
+            const questionId = `${moduleId}_${questionIndex}`;
 
-        console.log('Firebase não configurado');
-        return { success: false };
+            // Referência do progresso
+            const progressRef = window.firebaseDb
+                .collection('users')
+                .doc(userId)
+                .collection('progress')
+                .doc(questionId);
+
+            // Obter progresso atual
+            const doc = await progressRef.get();
+            const currentProgress = doc.exists ? doc.data() : {
+                seen: 0,
+                correct: 0,
+                incorrect: 0,
+                lastSeen: null
+            };
+
+            // Atualizar
+            currentProgress.seen += 1;
+            if (isCorrect) {
+                currentProgress.correct += 1;
+            } else {
+                currentProgress.incorrect += 1;
+            }
+            currentProgress.lastSeen = firebase.firestore.FieldValue.serverTimestamp();
+            currentProgress.moduleId = moduleId;
+            currentProgress.questionIndex = questionIndex;
+
+            // Salvar
+            await progressRef.set(currentProgress);
+
+            console.log(`✓ Progresso salvo (Firebase): ${questionId}`);
+
+            return {
+                success: true,
+                progress: currentProgress
+            };
+
+        } catch (error) {
+            console.error('Erro ao salvar progresso no Firebase:', error);
+            return {
+                success: false,
+                error: error.message
+            };
+        }
     }
 
     /**
@@ -301,12 +360,42 @@ class APIManager {
     }
 
     /**
-     * Salvar sessão no Firebase (futuro)
+     * Salvar sessão no Firebase
      */
     async saveSessionFirebase(userId, sessionData) {
-        // TODO: Implementar
-        console.log('Firebase não configurado');
-        return { success: false };
+        try {
+            const session = {
+                moduleId: sessionData.moduleId,
+                mode: sessionData.mode,
+                correctCount: sessionData.correctCount,
+                incorrectCount: sessionData.incorrectCount,
+                totalQuestions: sessionData.totalQuestions,
+                timeSpent: sessionData.timeSpent,
+                score: Math.round((sessionData.correctCount / sessionData.totalQuestions) * 100),
+                completedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            // Adicionar à coleção de sessões
+            await window.firebaseDb
+                .collection('users')
+                .doc(userId)
+                .collection('sessions')
+                .add(session);
+
+            console.log('✓ Sessão salva (Firebase)');
+
+            return {
+                success: true,
+                session: session
+            };
+
+        } catch (error) {
+            console.error('Erro ao salvar sessão no Firebase:', error);
+            return {
+                success: false,
+                error: error.message
+            };
+        }
     }
 
     /**
@@ -343,12 +432,57 @@ class APIManager {
     }
 
     /**
-     * Obter progresso do Firebase (futuro)
+     * Obter progresso do Firebase
      */
     async getProgressFirebase(userId, moduleId) {
-        // TODO: Implementar
-        console.log('Firebase não configurado');
-        return { success: false };
+        try {
+            // Buscar todas as questões do módulo para saber total
+            const questions = this.questionsCache[moduleId];
+
+            if (!questions) {
+                return {
+                    success: false,
+                    error: 'Módulo não carregado'
+                };
+            }
+
+            // Buscar progresso do usuário para este módulo
+            const progressSnapshot = await window.firebaseDb
+                .collection('users')
+                .doc(userId)
+                .collection('progress')
+                .where('moduleId', '==', moduleId)
+                .get();
+
+            let seenCount = 0;
+            let correctCount = 0;
+
+            progressSnapshot.forEach(doc => {
+                const data = doc.data();
+                if (data.seen > 0) seenCount++;
+                if (data.correct > 0) correctCount++;
+            });
+
+            const progress = {
+                seen: seenCount,
+                correct: correctCount,
+                total: questions.length,
+                seenPercentage: Math.round((seenCount / questions.length) * 100),
+                correctPercentage: Math.round((correctCount / questions.length) * 100)
+            };
+
+            return {
+                success: true,
+                progress: progress
+            };
+
+        } catch (error) {
+            console.error('Erro ao obter progresso do Firebase:', error);
+            return {
+                success: false,
+                error: error.message
+            };
+        }
     }
 
     /**
@@ -375,12 +509,64 @@ class APIManager {
     }
 
     /**
-     * Obter estatísticas do Firebase (futuro)
+     * Obter estatísticas do Firebase
      */
     async getStatisticsFirebase(userId) {
-        // TODO: Implementar
-        console.log('Firebase não configurado');
-        return { success: false };
+        try {
+            // Buscar todas as sessões do usuário
+            const sessionsSnapshot = await window.firebaseDb
+                .collection('users')
+                .doc(userId)
+                .collection('sessions')
+                .orderBy('completedAt', 'desc')
+                .limit(100)  // Últimas 100 sessões
+                .get();
+
+            const sessions = [];
+            sessionsSnapshot.forEach(doc => {
+                const data = doc.data();
+                // Converter timestamp para ISO string
+                if (data.completedAt && data.completedAt.toDate) {
+                    data.completedAt = data.completedAt.toDate().toISOString();
+                }
+                sessions.push(data);
+            });
+
+            // Calcular estatísticas
+            const totalQuestions = sessions.reduce((sum, s) => sum + s.totalQuestions, 0);
+            const totalCorrect = sessions.reduce((sum, s) => sum + s.correctCount, 0);
+            const totalIncorrect = sessions.reduce((sum, s) => sum + s.incorrectCount, 0);
+            const totalTime = sessions.reduce((sum, s) => sum + (s.timeSpent || 0), 0);
+            const averageScore = sessions.length > 0
+                ? Math.round(sessions.reduce((sum, s) => sum + s.score, 0) / sessions.length)
+                : 0;
+
+            const statistics = {
+                totalQuestions,
+                totalCorrect,
+                totalIncorrect,
+                totalTime,
+                totalSessions: sessions.length,
+                averageScore,
+                recentActivity: sessions.filter(s => {
+                    const sevenDaysAgo = new Date();
+                    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+                    return new Date(s.completedAt) >= sevenDaysAgo;
+                }).length
+            };
+
+            return {
+                success: true,
+                statistics: statistics
+            };
+
+        } catch (error) {
+            console.error('Erro ao obter estatísticas do Firebase:', error);
+            return {
+                success: false,
+                error: error.message
+            };
+        }
     }
 
     /**

@@ -9,7 +9,7 @@
 
 class AuthManager {
     constructor() {
-        this.useFirebase = false; // TODO: Alterar para true quando Firebase estiver configurado
+        this.useFirebase = true; // Firebase ativado! Configure em js/firebase-config.js
         this.currentUser = null;
     }
 
@@ -45,12 +45,34 @@ class AuthManager {
     }
 
     /**
-     * Inicializar Firebase (para implementação futura)
+     * Inicializar Firebase
      */
     async initFirebase() {
-        // TODO: Implementar quando Firebase for configurado
-        console.log('Firebase auth não configurado ainda');
-        return { success: false };
+        if (!window.firebaseAuth) {
+            console.error('Firebase Auth não disponível. Configure firebase-config.js');
+            return { success: false };
+        }
+
+        return new Promise((resolve) => {
+            window.firebaseAuth.onAuthStateChanged(async (firebaseUser) => {
+                if (firebaseUser) {
+                    // Usuário autenticado
+                    const user = {
+                        id: firebaseUser.uid,
+                        username: firebaseUser.displayName || firebaseUser.email.split('@')[0],
+                        email: firebaseUser.email
+                    };
+
+                    this.currentUser = user;
+                    window.AppState.login(user);
+
+                    console.log('✓ Sessão Firebase restaurada:', user.username);
+                    resolve({ success: true, user });
+                } else {
+                    resolve({ success: false, user: null });
+                }
+            });
+        });
     }
 
     /**
@@ -112,13 +134,72 @@ class AuthManager {
     }
 
     /**
-     * Registrar usuário no Firebase (futuro)
+     * Registrar usuário no Firebase
      */
     async registerFirebase(userData) {
-        // TODO: Implementar
-        // firebase.auth().createUserWithEmailAndPassword(email, password)
-        console.log('Firebase registration não implementado');
-        return { success: false, error: 'Firebase não configurado' };
+        const { username, email, password } = userData;
+
+        try {
+            // Criar usuário no Firebase Auth
+            const userCredential = await window.firebaseAuth.createUserWithEmailAndPassword(email, password);
+            const firebaseUser = userCredential.user;
+
+            // Atualizar profile com nome
+            await firebaseUser.updateProfile({
+                displayName: username
+            });
+
+            // Criar documento do usuário no Firestore
+            await window.firebaseDb.collection('users').doc(firebaseUser.uid).set({
+                username: username,
+                email: email,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            // Criar estrutura de progresso vazia
+            await window.firebaseDb.collection('users').doc(firebaseUser.uid).collection('progress').doc('_init').set({
+                initialized: true
+            });
+
+            const user = {
+                id: firebaseUser.uid,
+                username: username,
+                email: email
+            };
+
+            this.currentUser = user;
+            window.AppState.login(user);
+
+            console.log('✓ Usuário registrado no Firebase:', username);
+
+            return {
+                success: true,
+                user: user
+            };
+
+        } catch (error) {
+            console.error('Erro ao registrar no Firebase:', error);
+
+            let errorMessage = 'Erro ao criar conta';
+
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    errorMessage = 'Email já cadastrado';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = 'Email inválido';
+                    break;
+                case 'auth/weak-password':
+                    errorMessage = 'Senha muito fraca (mínimo 6 caracteres)';
+                    break;
+            }
+
+            return {
+                success: false,
+                error: errorMessage
+            };
+        }
     }
 
     /**
@@ -181,13 +262,61 @@ class AuthManager {
     }
 
     /**
-     * Login no Firebase (futuro)
+     * Login no Firebase
      */
     async loginFirebase(credentials) {
-        // TODO: Implementar
-        // firebase.auth().signInWithEmailAndPassword(email, password)
-        console.log('Firebase login não implementado');
-        return { success: false, error: 'Firebase não configurado' };
+        const { email, password } = credentials;
+
+        try {
+            const userCredential = await window.firebaseAuth.signInWithEmailAndPassword(email, password);
+            const firebaseUser = userCredential.user;
+
+            // Atualizar último login no Firestore
+            await window.firebaseDb.collection('users').doc(firebaseUser.uid).update({
+                lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            const user = {
+                id: firebaseUser.uid,
+                username: firebaseUser.displayName || email.split('@')[0],
+                email: firebaseUser.email
+            };
+
+            this.currentUser = user;
+            window.AppState.login(user);
+
+            console.log('✓ Login Firebase bem-sucedido:', user.username);
+
+            return {
+                success: true,
+                user: user
+            };
+
+        } catch (error) {
+            console.error('Erro ao fazer login no Firebase:', error);
+
+            let errorMessage = 'Erro ao fazer login';
+
+            switch (error.code) {
+                case 'auth/user-not-found':
+                    errorMessage = 'Usuário não encontrado';
+                    break;
+                case 'auth/wrong-password':
+                    errorMessage = 'Senha incorreta';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = 'Email inválido';
+                    break;
+                case 'auth/user-disabled':
+                    errorMessage = 'Conta desativada';
+                    break;
+            }
+
+            return {
+                success: false,
+                error: errorMessage
+            };
+        }
     }
 
     /**
@@ -213,13 +342,25 @@ class AuthManager {
     }
 
     /**
-     * Logout do Firebase (futuro)
+     * Logout do Firebase
      */
     async logoutFirebase() {
-        // TODO: Implementar
-        // firebase.auth().signOut()
-        console.log('Firebase logout não implementado');
-        return { success: false };
+        try {
+            await window.firebaseAuth.signOut();
+            this.currentUser = null;
+            window.AppState.logout();
+
+            console.log('✓ Logout Firebase bem-sucedido');
+
+            return { success: true };
+
+        } catch (error) {
+            console.error('Erro ao fazer logout do Firebase:', error);
+            return {
+                success: false,
+                error: 'Erro ao fazer logout'
+            };
+        }
     }
 
     /**
