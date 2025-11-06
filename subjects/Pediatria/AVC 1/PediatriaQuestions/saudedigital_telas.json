@@ -1,0 +1,392 @@
+[
+  {
+    "question": "Segundo as recomendações da Sociedade Brasileira de Pediatria (SBP) para 2024, qual é o tempo máximo diário de exposição às telas para crianças de 2 a 5 anos?",
+    "options": [
+      "Máximo de 1 hora por dia com conteúdo de qualidade e supervisão adulta",
+      "Evitar totalmente a exposição, inclusive passiva",
+      "Máximo de 2 horas por dia com conteúdo educativo",
+      "Máximo de 3 horas por dia nos fins de semana",
+      "Uso livre desde que não interfira no sono"
+    ],
+    "correctIndex": 0,
+    "explanation": "Para a faixa etária de 2 a 5 anos, a SBP recomenda no máximo 1 hora por dia de exposição às telas, sempre com conteúdo de qualidade e supervisão de um adulto. Evitar totalmente é para menores de 2 anos, e 2-3 horas é para adolescentes.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Qual é a recomendação da SBP para o uso de telas durante as refeições em todas as faixas etárias?",
+    "options": [
+      "Evitar totalmente o uso de telas durante as refeições familiares",
+      "Permitir apenas para conteúdos educativos durante o almoço",
+      "Liberar o uso durante jantares para distração infantil",
+      "Permitir até 30 minutos de tela durante refeições",
+      "Uso moderado desde que não atrapalhe a alimentação"
+    ],
+    "correctIndex": 0,
+    "explanation": "A SBP recomenda evitar totalmente o uso de telas durante as refeições para promover interação familiar e atenção à alimentação, independentemente da idade.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Para adolescentes de 11 a 18 anos, qual é o tempo máximo diário de uso de telas recomendado pela SBP?",
+    "options": [
+      "Máximo de 2 a 3 horas por dia, evitando virar noites",
+      "Máximo de 1 hora por dia com supervisão",
+      "Uso livre desde que não afete o rendimento escolar",
+      "Máximo de 4 horas por dia em dias de semana",
+      "Evitar totalmente o uso de redes sociais"
+    ],
+    "correctIndex": 0,
+    "explanation": "Para adolescentes de 11 a 18 anos, a SBP recomenda limitar o tempo de telas a 2-3 horas por dia, com ênfase em não 'virar a noite' jogando ou usando redes sociais.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Qual é a recomendação da SBP sobre a exposição passiva às telas para crianças menores de 2 anos?",
+    "options": [
+      "Evitar totalmente a exposição passiva, como TV ligada no ambiente",
+      "Permitir exposição passiva por até 1 hora diária",
+      "Liberar apenas para programas infantis educativos",
+      "Permitir durante momentos de cuidado do cuidador",
+      "Não há restrições para exposição passiva"
+    ],
+    "correctIndex": 0,
+    "explanation": "Para menores de 2 anos, a SBP recomenda evitar totalmente a exposição às telas, inclusive de forma passiva, pois interfere no desenvolvimento cerebral e na interação face a face.",
+    "type": "conteudista"
+  },
+  {
+    "question": "O que é o Plano de Uso de Telas Familiar recomendado pela SBP?",
+    "options": [
+      "Um acordo familiar com regras claras sobre tempo, conteúdo e contextos de uso de telas",
+      "Um aplicativo para monitorar o tempo de tela das crianças",
+      "Um plano para substituir telas por atividades físicas",
+      "Um documento para limitar o uso de telas a 1 hora diária",
+      "Uma estratégia para eliminar totalmente o uso de telas"
+    ],
+    "correctIndex": 0,
+    "explanation": "O Plano de Uso de Telas Familiar é um acordo que estabelece regras claras sobre tempo, conteúdo, contextos e supervisão do uso de telas, adaptado à realidade de cada família.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Qual é a recomendação da SBP sobre o uso de telas nos quartos de crianças e adolescentes?",
+    "options": [
+      "Não permitir telas ou celulares nos quartos, especialmente à noite",
+      "Permitir apenas TVs nos quartos com controle parental",
+      "Liberar o uso no quarto por até 2 horas antes de dormir",
+      "Permitir apenas para estudos no quarto",
+      "Não há restrições específicas para uso nos quartos"
+    ],
+    "correctIndex": 0,
+    "explanation": "A SBP recomenda não permitir telas ou celulares nos quartos para evitar distúrbios do sono, superexposição e riscos digitais, mantendo os dispositivos em áreas comuns.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Mãe relata que seu filho de 3 anos assiste a desenhos no tablet por 3 horas diárias. Qual a orientação mais adequada baseada nas recomendações da SBP?",
+    "options": [
+      "Reduzir imediatamente para no máximo 1 hora/dia com conteúdo quality e supervisão",
+      "Manter o tempo atual mas trocar por conteúdo educativo",
+      "Eliminar totalmente o uso de telas por ser menor de 5 anos",
+      "Permitir o uso apenas aos fins de semana",
+      "Aumentar o tempo para 4 horas com intervalos"
+    ],
+    "correctIndex": 0,
+    "explanation": "Para crianças de 2-5 anos, o máximo recomendado é 1 hora/dia. Reduzir o tempo e garantir conteúdo quality com supervisão é a orientação correta, não eliminar totalmente (recomendado para <2 anos).",
+    "type": "raciocínio"
+  },
+  {
+    "question": "Pais de adolescente de 16 anos relatam que ele fica até 3h da manhã jogando online. Qual a abordagem inicial mais adequada?",
+    "options": [
+      "Estabelecer regras claras para desligar telas 1-2h antes de dormir e limitar tempo noturno",
+      "Proibir totalmente os jogos online durante a semana",
+      "Permitir que ele gerence seu próprio tempo de sono",
+      "Substituir jogos por atividades físicas sem reduzir tempo de tela",
+      "Ignorar o comportamento pois é comum na adolescência"
+    ],
+    "correctIndex": 0,
+    "explanation": "A abordagem mais adequada é estabelecer regras claras baseadas nas recomendações da SBP: desligar telas 1-2h antes de dormir e limitar o tempo noturno para proteger o sono e a saúde.",
+    "type": "raciocínio"
+  },
+  {
+    "question": "Qual é o principal impacto do uso excessivo de telas no risco de obesidade infantil?",
+    "options": [
+      "Aumento do sedentarismo e redução da atividade física",
+      "Aumento do consumo de calorias por publicidade de alimentos",
+      "Alteração no metabolismo basal por exposição à luz azul",
+      "Redução da qualidade do sono leading to ganho de peso",
+      "Todos os impactos acima estão corretos"
+    ],
+    "correctIndex": 4,
+    "explanation": "O uso excessivo de telas contribui para a obesidade infantil através de múltiplos mecanismos: sedentarismo, maior consumo de calorias por influência publicitária, alterações metabólicas e distúrbios do sono.",
+    "type": "conteudista"
+  },
+  {
+    "question": "A síndrome da visão do computador inclui quais sintomas oculares?",
+    "options": [
+      "Fadiga ocular, ardência, visão embaçada e dor de cabeça",
+      "Miopia progressiva e astigmatismo irreversível",
+      "Secura ocular apenas em usuários de lente de contato",
+      "Perda permanente da acuidade visual",
+      "Diplopia e fotofobia isoladas"
+    ],
+    "correctIndex": 0,
+    "explanation": "A síndrome da visão do computador caracteriza-se por fadiga ocular, ardência, visão embaçada e cefaleia, relacionados ao esforço acomodativo prolongado e redução do piscar.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Quais problemas posturais são mais comuns em crianças com uso prolongado de telas?",
+    "options": [
+      "Dores cervicais, lombares e anteriorização da cabeça",
+      "Escoliose estrutural e cifose juvenil",
+      "Artrose precoce em articulações periféricas",
+      "Fraturas por estresse em membros superiores",
+      "Atrofia muscular generalizada"
+    ],
+    "correctIndex": 0,
+    "explanation": "O uso prolongado de telas leva a posturas inadequadas como anteriorização da cabeça e ombros, causando dores cervicais e lombares pela sobrecarga muscular.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Como a luz azul das telas interfere no sono de adolescentes?",
+    "options": [
+      "Suprime a produção de melatonina, atrasando o início do sono",
+      "Aumenta a produção de cortisol, causando insônia",
+      "Causa despertares frequentes durante a noite",
+      "Reduz a quantidade de sono REM",
+      "Aumenta a sonolência diurna excessiva"
+    ],
+    "correctIndex": 0,
+    "explanation": "A luz azul suprime a produção de melatonina, hormônio que regula o ciclo sono-vigília, atrasando o início do sono e reduzindo sua qualidade.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Adolescente apresenta cefaleia, fadiga ocular e dor cervical após estudar online por 5h/dia. Qual a conduta mais adequada?",
+    "options": [
+      "Orientar pausas regulares, ajuste ergonômico e limitar tempo contínuo de tela",
+      "Prescrever analgésicos para a cefaleia e encaminhar ao oftalmologista",
+      "Suspender imediatamente todas as atividades online",
+      "Recomendar uso de óculos com filtro azul sem outras mudanças",
+      "Atribuir os sintomas ao estresse acadêmico apenas"
+    ],
+    "correctIndex": 0,
+    "explanation": "A conduta mais adequada inclui orientações práticas: pausas regulares (regra 20-20-20), ajuste ergonômico e limitação do tempo contínuo de tela para abordar a causa dos sintomas.",
+    "type": "raciocínio"
+  },
+  {
+    "question": "Qual é a associação entre uso excessivo de redes sociais e saúde mental em adolescentes?",
+    "options": [
+      "Aumento do risco de ansiedade, depressão e baixa autoestima",
+      "Melhora da autoestima por validação social",
+      "Redução do isolamento social e solidão",
+      "Aumento da resiliência emocional",
+      "Nenhuma associação significativa"
+    ],
+    "correctIndex": 0,
+    "explanation": "O uso excessivo de redes sociais associa-se a maior risco de ansiedade, depressão e baixa autoestima devido à comparação social, cyberbullying e distorção da realidade.",
+    "type": "conteudista"
+  },
+  {
+    "question": "O que caracteriza a dependência digital em adolescentes?",
+    "options": [
+      "Uso compulsivo, perda de controle e prejuízo nas atividades diárias",
+      "Interesse excessivo por tecnologia e games",
+      "Preferência por interações online em detrimento de presenciais",
+      "Uso de telas por mais de 4 horas diárias",
+      "Todos os acima são critérios diagnósticos"
+    ],
+    "correctIndex": 0,
+    "explanation": "A dependência digital caracteriza-se por uso compulsivo, perda de controle sobre o tempo de uso e prejuízo significativo nas atividades diárias, similar a outros transtornos por uso de substâncias.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Como o uso excessivo de telas afeta a regulação emocional em crianças?",
+    "options": [
+      "Aumenta a irritabilidade e dificuldade em tolerar frustrações",
+      "Melhora o reconhecimento de emoções por exposição a conteúdos variados",
+      "Reduz a ansiedade por distração constante",
+      "Promove estabilidade emocional por rotina",
+      "Não afeta a regulação emocional"
+    ],
+    "correctIndex": 0,
+    "explanation": "O uso excessivo de telas está associado a maior irritabilidade, dificuldade em tolerar frustrações e prejuízos no desenvolvimento de habilidades de regulação emocional.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Qual mecanismo cerebral explica o potencial viciante das telas?",
+    "options": [
+      "Ativação do sistema de recompensa com liberação de dopamina",
+      "Inibição do córtex pré-frontal leading to perda de controle",
+      "Alteração nos níveis de serotonina e noradrenalina",
+      "Redução da neuroplasticidade em áreas cognitivas",
+      "Atrofia do hipocampo por estresse crônico"
+    ],
+    "correctIndex": 0,
+    "explanation": "As telas ativam o sistema de recompensa cerebral, liberando dopamina de forma similar a comportamentos viciantes, reforçando o uso compulsivo.",
+    "type": "conteudista"
+  },
+  {
+    "question": "A baixa autoestima em adolescentes relaciona-se ao uso de redes sociais principalmente por:",
+    "options": [
+      "Comparação social constante com padrões irreais de vida",
+      "Exposição a críticas e comentários negativos online",
+      "Falta de validação digital por poucos seguidores",
+      "Isolamento social por preferência por interações virtuais",
+      "Todos os fatores acima contribuem"
+    ],
+    "correctIndex": 4,
+    "explanation": "A baixa autoestima em adolescentes associa-se a múltiplos fatores das redes sociais: comparação social, críticas, falta de validação e isolamento.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Adolescente apresenta humor deprimido, isolamento e uso compulsivo de redes sociais por 6h/dia. Qual a conduta inicial?",
+    "options": [
+      "Avaliar dependência digital e sintomas psiquiátricos, orientando redução gradual de tempo de tela",
+      "Prescrever antidepressivos e encaminhar ao psiquiatra",
+      "Proibir imediatamente o uso de redes sociais",
+      "Atribuir o comportamento à typical da adolescência",
+      "Recomendar aumento de atividades físicas sem mudar uso de telas"
+    ],
+    "correctIndex": 0,
+    "explanation": "A conduta inicial deve incluir avaliação de dependência digital e sintomas psiquiátricos, com orientação para redução gradual do tempo de tela e encaminhamento se necessário.",
+    "type": "raciocínio"
+  },
+  {
+    "question": "Qual é o impacto do uso de telas no desenvolvimento da linguagem em menores de 2 anos?",
+    "options": [
+      "Atraso na aquisição de vocabulário e habilidades comunicativas",
+      "Aceleração do desenvolvimento por exposição a estímulos",
+      "Melhora na pronúncia por imitação de sons",
+      "Nenhum impacto significativo no desenvolvimento",
+      "Apenas afeta crianças com predisposição genética"
+    ],
+    "correctIndex": 0,
+    "explanation": "Em menores de 2 anos, o uso de telas está associado a atrasos na aquisição de vocabulário e habilidades comunicativas, pois substitui interações face a face essenciais.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Como o uso excessivo de telas afeta a atenção e concentração em crianças em idade escolar?",
+    "options": [
+      "Reduz a capacidade de sustentar a atenção em tarefas prolongadas",
+      "Melhora a multitarefa e switching atencional",
+      "Aumenta o foco em atividades de alto estímulo",
+      "Não afeta a atenção se o conteúdo for educativo",
+      "Causa apenas impactos temporários na atenção"
+    ],
+    "correctIndex": 0,
+    "explanation": "O uso excessivo de telas reduz a capacidade de sustentar a atenção em tarefas prolongadas devido à superestimulação e rápida alternância de conteúdos.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Qual é a relação entre tempo de tela e rendimento escolar em adolescentes?",
+    "options": [
+      "Uso superior a 2-3h/dia associa-se a menor desempenho acadêmico",
+      "Uso de telas melhora o rendimento por acesso a informações",
+      "Não há relação comprovada entre tempo de tela e notas",
+      "Apenas o uso noturno afeta o rendimento",
+      "O rendimento melhora com uso de apps educativos"
+    ],
+    "correctIndex": 0,
+    "explanation": "Estudos mostram que uso superior a 2-3h/dia de telas recreacionais associa-se a menor desempenho acadêmico, devido a distração, sono inadequado e redução do estudo.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Como o uso de telas impacta a criatividade em crianças?",
+    "options": [
+      "Reduz oportunidades para brincadeiras livres e imaginativas",
+      "Aumenta a criatividade por exposição a conteúdos variados",
+      "Não afeta a criatividade se o conteúdo for interativo",
+      "Melhora a resolução de problemas em contextos digitais",
+      "Apenas impacta crianças com baixa criatividade innate"
+    ],
+    "correctIndex": 0,
+    "explanation": "O uso excessivo de telas reduz o tempo para brincadeiras livres e imaginativas, essenciais para o desenvolvimento da criatividade e pensamento divergente.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Criança de 4 anos apresenta atraso na fala e preferência por videos no celular. Qual a conduta?",
+    "options": [
+      "Orientar eliminação de telas e estimular interação verbal e brincadeiras",
+      "Encaminhar apenas para fonoaudiologia sem mudar hábitos",
+      "Substituir videos por apps educativos de linguagem",
+      "Manter o uso atual mas aumentar estímulos verbais",
+      "Aguardar desenvolvimento espontâneo até os 5 anos"
+    ],
+    "correctIndex": 0,
+    "explanation": "A conduta mais adequada é eliminar as telas e estimular interação verbal e brincadeiras, pois o atraso na fala está associado ao uso excessivo de telas nesta idade.",
+    "type": "raciocínio"
+  },
+  {
+    "question": "Qual é um dos principais riscos do cyberbullying para adolescentes?",
+    "options": [
+      "Agravamento de sintomas depressivos e ideação suicida",
+      "Melhora da resiliência emocional a longo prazo",
+      "Aumento da popularidade nas redes sociais",
+      "Redução do desempenho acadêmico temporário",
+      "Nenhum risco significativo comprovado"
+    ],
+    "correctIndex": 0,
+    "explanation": "O cyberbullying associa-se a agravamento de sintomas depressivos, ansiedade e aumento do risco de ideação suicida em adolescentes, requerendo intervenção imediata.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Como o uso excessivo de telas afeta a interação social face a face em crianças?",
+    "options": [
+      "Reduz a capacidade de interpretar pistas não verbais e empatia",
+      "Melhora a comunicação em grupos grandes",
+      "Aumenta a confiança em situações sociais",
+      "Não afeta as habilidades sociais adquiridas",
+      "Apenas impacta crianças com autismo"
+    ],
+    "correctIndex": 0,
+    "explanation": "O uso excessivo de telas reduz a prática de interações face a face, prejudicando a capacidade de interpretar pistas não verbais e desenvolver empatia.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Pais relatam que filho adolescente recebeu mensagens inadequadas de desconhecidos online. Qual a orientação?",
+    "options": [
+      "Orientar sobre configurações de privacidade, supervisão e diálogo sobre riscos",
+      "Proibir imediatamente o uso de redes sociais",
+      "Ignorar pois é comum na adolescência",
+      "Encaminhar apenas para aconselhamento psicológico",
+      "Monitorar secretamente as conversas online"
+    ],
+    "explanation": "A orientação adequada inclui educação sobre privacidade, supervisão parental e diálogo aberto sobre riscos digitais, promovendo segurança sem alienação.",
+    "correctIndex": 0,
+    "type": "raciocínio"
+  },
+  {
+    "question": "Adolescente isolou-se socialmente e prefere jogos online. Como identificar se é comportamento de risco?",
+    "options": [
+      "Avaliar se há prejuízo nas relações familiares, escola e atividades diárias",
+      "Comparar com tempo de tela médio de outros adolescentes",
+      "Verificar se os jogos são educativos ou recreativos",
+      "Avaliar apenas o número de horas diárias de uso",
+      "Considerar risk apenas se houver histórico psiquiátrico"
+    ],
+    "correctIndex": 0,
+    "explanation": "O comportamento é de risco quando há prejuízo significativo nas relações familiares, desempenho escolar e atividades diárias, não apenas pelo tempo de tela.",
+    "type": "raciocínio"
+  },
+  {
+    "question": "Até que idade o córtex pré-frontal, responsável por funções executivas, completa seu desenvolvimento?",
+    "options": [
+      "Around 25 anos de idade, em média",
+      "Aos 18 anos, com a maioridade legal",
+      "Aos 21 anos, no início da vida adulta",
+      "Aos 16 anos, durante a adolescência",
+      "Aos 30 anos, na fase adulta plena"
+    ],
+    "correctIndex": 0,
+    "explanation": "O córtex pré-frontal, responsável por planejamento, controle de impulsos e tomada de decisão, completa seu desenvolvimento por volta dos 25 anos, tornando adolescentes mais vulneráveis a impulsividade.",
+    "type": "conteudista"
+  },
+  {
+    "question": "Por que o cérebro adolescente é mais vulnerável a efeitos das telas?",
+    "options": [
+      "Córtex pré-frontal imaturo e sistema de recompensa hiperativo",
+      "Neuroplasticidade reduzida e menor capacidade de aprendizado",
+      "Mielinização completa apenas após os 30 anos",
+      "Menor produção de neurotransmissores excitatórios",
+      "Maior susceptibilidade a danos neuronais permanentes"
+    ],
+    "correctIndex": 0,
+    "explanation": "O cérebro adolescente tem córtex pré-frontal imaturo (controle inibitório) e sistema de recompensa hiperativo, aumentando vulnerabilidade a dependências e comportamentos impulsivos com telas.",
+    "type": "raciocínio"
+  }
+]
